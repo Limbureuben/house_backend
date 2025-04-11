@@ -1,17 +1,7 @@
 from rest_framework import serializers
-from .models import House, Service
-
-class ServiceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Service
-        fields = ['id', 'name']
+from .models import House
 
 class HouseSerializer(serializers.ModelSerializer):
-    services = serializers.PrimaryKeyRelatedField(
-        queryset=Service.objects.all(),
-        many=True
-    )
-
     class Meta:
         model = House
         fields = '__all__'
