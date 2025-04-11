@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import House, Service
-from .serializers import HouseSerializer, ServiceSerializer
+from .models import House
+from .serializers import HouseSerializer
 
 
 class HouseViewSet(viewsets.ModelViewSet):
