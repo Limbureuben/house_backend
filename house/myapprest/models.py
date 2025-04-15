@@ -9,7 +9,7 @@ class House(models.Model):
         ('bungalow', 'Bungalow'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='houses')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='houses')
     house_type = models.CharField(max_length=20, choices=HOUSE_TYPES)
     number_of_rooms = models.PositiveIntegerField()
     price_per_month = models.DecimalField(max_digits=10, decimal_places=2)
