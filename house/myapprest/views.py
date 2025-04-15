@@ -14,3 +14,9 @@ class HouseViewSet(viewsets.ModelViewSet):
             serializer.save(user=user)
         else:
             serializer.save()
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user', None)
+        if user_id:
+            return House.objects.filter(user_id=user_id)
+        return House.objects.all()
