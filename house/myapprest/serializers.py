@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import House
+from .models import *
 from django.contrib.auth.models import User
 
 class HouseSerializer(serializers.ModelSerializer):
@@ -12,3 +12,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'is_staff']
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = '__all__'
