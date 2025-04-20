@@ -6,7 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer
+from .serializers import *
+from .utils.pdf_generator import generate_booking_pdf
 
 class HouseViewSet(viewsets.ModelViewSet):
     queryset = House.objects.all()
@@ -39,3 +40,29 @@ class UserProfileView(APIView):
         serializer = UserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+
+
+class CreateBookingView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        house_id = request.data.get('house_id')
+        if not house_id:
+            return Response({'error': 'House ID is required'}, status=400)
+
+        try:
+            house = House.objects.get(id=house_id)
+        except House.DoesNotExist:
+            return Response({'error': 'House not found'}, status=404)
+
+        booking = Booking.objects.create(user=request.user, house=house)
+
+        # Generate PDF agreement
+        filename = f"booking_{booking.id}.pdf"
+        pdf_path = generate_booking_pdf(booking, filename)
+
+        return Response({
+            'message': 'Booking created',
+            'pdf_url': request.build_absolute_uri(f"/media/pdfs/{filename}")
+        }, status=201)
