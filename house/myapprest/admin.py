@@ -8,5 +8,5 @@ class HouseAdmin(admin.ModelAdmin):
 admin.site.register(House, HouseAdmin)
 
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'house', 'booked_at')
+    list_display = ('user', 'house', 'date_booked')
 admin.site.register(Booking, BookingAdmin)
