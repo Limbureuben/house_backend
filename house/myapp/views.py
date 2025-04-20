@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from graphql import GraphQLError
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import *
 
 class UserType(DjangoObjectType):
     class Meta:
@@ -78,3 +79,21 @@ class LoginUser(graphene.Mutation):
                 role="user",  # This indicates a regular user
             )
 
+
+class CreateBooking(graphene.Mutation):
+    class Arguments:
+        house_id = graphene.ID(required=True)
+
+    booking = graphene.Field(BookingType)
+    pdf_url = graphene.String()
+
+    def mutate(self, info, house_id):
+        user = info.context.user
+        house = House.objects.get(id=house_id)
+        booking = Booking.objects.create(user=user, house=house, status='pending')
+
+        filename = f"agreement_{booking.id}.pdf"
+        pdf_path = generate_booking_pdf(booking, filename)
+
+        pdf_url = f"/media/pdfs/{filename}"  # Make sure media is served
+        return CreateBooking(booking=booking, pdf_url=pdf_url)
