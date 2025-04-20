@@ -48,7 +48,7 @@ class LoginUser(graphene.Mutation):
     success = graphene.Boolean()
     message = graphene.String()
     role = graphene.String()
-    token = graphene.String()  # Field to return the JWT token
+    token = graphene.String()
 
     def mutate(self, info, username, password):
         user = authenticate(username=username, password=password)
@@ -67,6 +67,7 @@ class LoginUser(graphene.Mutation):
                 message="Admin login successful",
                 token=access_token,
                 role="staff",  # This indicates an admin user
+
             )
         else:
             return LoginUser(
