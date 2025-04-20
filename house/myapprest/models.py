@@ -20,3 +20,9 @@ class House(models.Model):
 
     def __str__(self):
         return f"{self.house_type} - {self.location}"
+
+
+class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    booked_at = models.DateTimeField(auto_now_add=True)
