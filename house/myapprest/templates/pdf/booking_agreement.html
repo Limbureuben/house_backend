@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Agreement</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1 {
+      text-align: center;
+      text-decoration: underline;
+      margin-bottom: 40px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .label {
+      font-weight: bold;
+    }
+
+    .agreement-text {
+      margin-top: 30px;
+      margin-bottom: 50px;
+    }
+
+    .signature-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 80px;
+    }
+
+    .signature-section {
+      width: 45%;
+      text-align: center;
+      border: 1px solid #000;
+      padding: 20px;
+      height: 180px;
+    }
+
+    .signature-line {
+      margin-top: 60px;
+      border-top: 1px solid #000;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .signature-label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .dotted {
+      border-bottom: 1px dotted #000;
+      display: inline-block;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Room Booking Agreement</h1>
+
+  <div class="section">
+    <p><span class="label">Tenant Name:</span> ......................</p>
+    <p><span class="label">Contact Phone:</span> ......................</p>
+  </div>
+
+  <div class="section">
+    <p><span class="label">House Type:</span> {{ booking.house.house_type }}</p>
+    <p><span class="label">Location:</span> {{ booking.house.location }}</p>
+    <p><span class="label">Available From:</span> {{ booking.house.availability_date }}</p>
+    <p><span class="label">Monthly Rent:</span> TZS {{ booking.house.price_per_month }}</p>
+  </div>
+
+  <div class="section">
+    <p><span class="label">Date of Booking:</span> {{ booking.booked_at }}</p>
+  </div>
+
+  <div class="agreement-text">
+    <p>This agreement serves as a formal understanding between the Tenant and the Landlord for renting the above-described property. By signing below, both parties agree to the terms and conditions of the rental.</p>
+  </div>
+
+  <div class="signature-container">
+    <!-- Tenant Signature Section -->
+    <div class="signature-section">
+      <div class="signature-line"></div>
+      <div class="signature-label">Tenant Signature</div>
+      <p>......................</p>
+    </div>
+
+    <!-- Landlord Signature Section -->
+    <div class="signature-section">
+      <div class="signature-line"></div>
+      <div class="signature-label">Landlord Signature</div>
+      <p>......................</p>
+    </div>
+  </div>
+
+</body>
+</html>
