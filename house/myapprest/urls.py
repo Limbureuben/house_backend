@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HouseViewSet, UserProfileView
+from .views import *
 
 house_list = HouseViewSet.as_view({
     'get': 'list',
@@ -17,4 +17,5 @@ urlpatterns = [
     path('houses/', house_list, name='house-list'),
     path('houses/<int:pk>/', house_detail, name='house-detail'),
     path('profile/', UserProfileView.as_view(), name='user-profile'),
+    path('api/book/', CreateBookingView.as_view(), name='create-booking'),
 ]
