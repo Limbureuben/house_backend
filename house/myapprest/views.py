@@ -57,9 +57,10 @@ class CreateBookingView(APIView):
 
         booking = Booking.objects.create(user=request.user, house=house)
 
-        # Generate PDF in memory instead of saving to file system
-        pdf_file = generate_booking_pdf(booking)
+        pdf_bytes = generate_booking_pdf(booking)
+        if not pdf_bytes:
+            return Response({'error': 'Failed to generate PDF'}, status=500)
 
-        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="rental_agreement.pdf"'
         return response
