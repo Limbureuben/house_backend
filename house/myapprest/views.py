@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from .utils.pdf_generator import generate_booking_pdf
+from django.http import HttpResponse
 
 class HouseViewSet(viewsets.ModelViewSet):
     queryset = House.objects.all()
@@ -56,11 +57,9 @@ class CreateBookingView(APIView):
 
         booking = Booking.objects.create(user=request.user, house=house)
 
-        # Generate PDF agreement
-        filename = f"booking_{booking.id}.pdf"
-        pdf_path = generate_booking_pdf(booking, filename)
+        # Generate PDF in memory instead of saving to file system
+        pdf_file = generate_booking_pdf(booking)  # update this function to return bytes
 
-        return Response({
-            'message': 'Booking created',
-            'pdf_url': request.build_absolute_uri(f"/media/pdfs/{filename}")
-        }, status=201)
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="rental_agreement.pdf"'
+        return response
