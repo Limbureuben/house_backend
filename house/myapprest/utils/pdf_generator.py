@@ -1,15 +1,15 @@
 from xhtml2pdf import pisa
 from django.template.loader import get_template
-import os
+from io import BytesIO
 
-def generate_booking_pdf(booking, filename):
+def generate_booking_pdf(booking):
     template = get_template('pdf/booking_agreement.html')
     html = template.render({'booking': booking})
 
-    pdf_path = os.path.join('media/pdfs', filename)
-    os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+    result = BytesIO()
+    pisa_status = pisa.CreatePDF(html, dest=result)
 
-    with open(pdf_path, 'wb+') as pdf_file:
-        pisa.CreatePDF(html, dest=pdf_file)
+    if pisa_status.err:
+        return None
 
-    return pdf_path
+    return result.getvalue()  # Returns PDF as bytes
