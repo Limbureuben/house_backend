@@ -1,0 +1,16 @@
+# Ignore Python stuff
+__pycache__/
+*.py[cod]
+
+# Ignore media files
+*.jpg
+*.png
+*.pdf
+
+# Ignore environment files
+.env
+*.sqlite3
+
+# Ignore virtual environments
+venv/
+reuben/
