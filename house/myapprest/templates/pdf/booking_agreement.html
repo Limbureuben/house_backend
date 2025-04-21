@@ -5,79 +5,89 @@
   <style>
     body {
       font-family: "Helvetica", sans-serif;
-      line-height: 1.4;
+      line-height: 1.3;
       color: #333;
-      padding: 20px;
-      font-size: 13px;
+      padding: 20px 30px;
+      font-size: 12px;
+      margin: 0;
     }
 
     h1, h2 {
       color: #2c3e50;
       text-align: center;
-      margin: 10px 0;
+      margin: 5px 0;
+    }
+
+    p {
+      margin: 5px 0;
     }
 
     .section {
-      margin-bottom: 15px;
+      margin: 10px 0;
     }
 
     .info-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 5px;
+      font-size: 12px;
     }
 
     .info-table td {
-      padding: 5px;
+      padding: 4px 6px;
       border: 1px solid #ccc;
     }
 
+    ol {
+      margin: 6px 0 0 18px;
+      padding: 0;
+    }
+
+    ol li {
+      margin-bottom: 4px;
+      padding-left: 2px;
+    }
+
     .signature-section {
+      margin-top: 25px;
+    }
+
+    .signature-row {
+      display: flex;
+      justify-content: space-between;
       margin-top: 30px;
     }
 
     .signature-box {
       width: 48%;
-      display: inline-block;
       text-align: center;
-      vertical-align: top;
-      margin: 0 1%;
     }
 
     .signature-line {
+      margin: 20px auto 5px;
       border-top: 1px solid #000;
-      margin-top: 40px;
-      width: 90%;
-      margin-left: auto;
-      margin-right: auto;
+      width: 100%;
     }
 
-    .date {
-      font-size: 11px;
-      margin-top: 3px;
+    .date-line {
+      display: inline-block;
+      border-bottom: 1px solid #000;
+      width: 50%;
+      height: 1px;
+      vertical-align: middle;
     }
 
     .footer {
       text-align: center;
       font-size: 10px;
       color: #777;
-      margin-top: 30px;
-    }
-
-    ol {
-      margin: 5px 0 0 18px;
-      padding-left: 0;
-    }
-
-    ol li {
-      margin-bottom: 4px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
   <h1>Rental House Agreement</h1>
-  <p style="text-align:center; margin-bottom: 10px;">This agreement confirms the booking of the house as described below:</p>
+  <p style="text-align:center;">This agreement confirms the booking of the house as described below:</p>
 
   <div class="section">
     <h2>Booking Details</h2>
@@ -95,31 +105,30 @@
   <div class="section">
     <h2>Terms & Conditions</h2>
     <ol>
-      <li><strong>Duration:</strong> Valid from the date of booking until a formal rental agreement is signed or cancelled.</li>
-      <li><strong>Monthly Rent:</strong> Must be paid on or before the due date; delays may incur penalties.</li>
-      <li><strong>Security Deposit:</strong> Refundable upon contract end, minus any deductions for damage or dues.</li>
-      <li><strong>Maintenance:</strong> Tenant must maintain cleanliness and report issues. Tenant-caused damages are their responsibility.</li>
-      <li><strong>Utilities:</strong> Tenant covers water, electricity, and internet unless otherwise agreed.</li>
-      <li><strong>Cancellation:</strong> Both parties can cancel before move-in. Tenant may incur a cancellation fee.</li>
-      <li><strong>Occupancy:</strong> For tenant and approved occupants only. Subletting requires written consent.</li>
-      <li><strong>Final Agreement:</strong> This is a preliminary document; a full contract will follow upon move-in.</li>
+      <li><strong>Duration:</strong> Valid from booking date until formal rental agreement or cancellation.</li>
+      <li><strong>Monthly Rent:</strong> Payable monthly on or before the due date. Late payments may incur penalties.</li>
+      <li><strong>Security Deposit:</strong> Refundable at the end of tenancy, subject to deductions for damages or dues.</li>
+      <li><strong>Maintenance:</strong> Tenant is responsible for cleanliness and reporting any issues. Tenant-caused damages are charged to the tenant.</li>
+      <li><strong>Utilities:</strong> Tenant pays for utilities unless otherwise agreed.</li>
+      <li><strong>Cancellation:</strong> Either party can cancel before move-in. Tenant cancellation may incur a fee.</li>
+      <li><strong>Occupancy:</strong> For tenant and approved co-occupants only. Subletting requires landlord’s written consent.</li>
+      <li><strong>Final Agreement:</strong> This is a preliminary agreement. A full contract will follow before or at move-in.</li>
     </ol>
   </div>
 
   <div class="signature-section">
-    <div class="signature-box">
-      <p>Tenant Signature</p>
-      <div class="signature-line"></div>
-      <div class="date">Date: ......................</div>
-    </div>
-
-    <div class="signature-box">
-      <p>Landlord Signature</p>
-      <div class="signature-line"></div>
-      <div class="date">Date: ......................</div>
+    <div class="signature-row">
+      <div class="signature-box">
+        <p><strong>Tenant Signature:</strong> ..................</p>
+        <p><strong>Date:</strong> ..................</p>
+      </div>
+      <div class="signature-box">
+        <p><strong>Landlord Signature:</strong> ..................</p>
+        <p><strong>Date:</strong> ..................</p>
+      </div>
     </div>
   </div>
-
+  
   <div class="footer">
     This document was generated automatically. Please review it carefully before signing.
   </div>
