@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: "Helvetica", sans-serif;
+      line-height: 1.6;
+      color: #333;
+      padding: 30px;
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .info-table td {
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .signature-section {
+      margin-top: 50px;
+    }
+
+    .signature-box {
+      width: 45%;
+      display: inline-block;
+      text-align: center;
+      vertical-align: top;
+      margin: 0 2%;
+    }
+
+    .signature-line {
+      border-top: 1px solid #000;
+      margin-top: 60px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .date {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 10px;
+      color: #777;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Rental House Agreement</h1>
+  <p style="text-align:center;">This agreement confirms the booking of the house as described below:</p>
+
+  <div class="section">
+    <h2>Booking Details</h2>
+    <table class="info-table">
+      <tr><td><strong>Tenant:</strong></td><td>..............................</td></tr>
+      <tr><td><strong>Contact:</strong></td><td>{{ booking.house.contact }}</td></tr>
+      <tr><td><strong>House Type:</strong></td><td>{{ booking.house.house_type }}</td></tr>
+      <tr><td><strong>Location:</strong></td><td>{{ booking.house.location }}</td></tr>
+      <tr><td><strong>Available From:</strong></td><td>{{ booking.house.availability_date }}</td></tr>
+      <tr><td><strong>Monthly Rent:</strong></td><td>TZS {{ booking.house.price_per_month }}</td></tr>
+      <tr><td><strong>Date Booked:</strong></td><td>{{ booking.date_booked }}</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Terms & Conditions</h2>
+    <ol style="margin-left: 20px;">
+      <li><strong>Duration:</strong> This agreement is valid from the date of booking and will remain in effect until a formal rental agreement is signed or the booking is cancelled.</li>
+      <li><strong>Monthly Rent:</strong> The tenant agrees to pay the stated amount on or before the due date each month. Delay in payment may result in penalties or termination of the agreement.</li>
+      <li><strong>Security Deposit:</strong> A refundable security deposit may be required upon signing the full rental contract. This deposit will be returned at the end of the tenancy, subject to deductions for damages or unpaid dues.</li>
+      <li><strong>Maintenance:</strong> The tenant is responsible for keeping the premises clean and reporting any issues or damages to the landlord promptly. Damages caused by the tenant will be repaired at the tenant’s expense.</li>
+      <li><strong>Utilities:</strong> Unless otherwise agreed, the tenant is responsible for all utility bills including water, electricity, and internet.</li>
+      <li><strong>Cancellation:</strong> Either party may cancel this agreement prior to moving in. If the tenant cancels after booking, a cancellation fee may apply at the landlord’s discretion.</li>
+      <li><strong>Occupancy:</strong> The house is to be occupied solely by the tenant and any listed co-occupants. Subletting is strictly prohibited without the landlord’s written consent.</li>
+      <li><strong>Final Agreement:</strong> This document serves as an initial commitment. A complete and detailed rental agreement will be signed before or upon move-in.</li>
+    </ol>
+  </div>
+  
+  <div class="signature-section">
+    <div class="signature-box">
+      <p>Tenant Signature</p>
+      <div class="signature-line"></div>
+      <div class="date">Date: ......................</div>
+    </div>
+
+    <div class="signature-box">
+      <p>Landlord Signature</p>
+      <div class="signature-line"></div>
+      <div class="date">Date: ......................</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    This document was generated automatically. Please review it carefully before signing.
+  </div>
+
+</body>
+</html>
