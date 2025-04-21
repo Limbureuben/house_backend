@@ -18,4 +18,5 @@ urlpatterns = [
     path('houses/<int:pk>/', house_detail, name='house-detail'),
     path('profile/', UserProfileView.as_view(), name='user-profile'),
     path('book/', CreateBookingView.as_view(), name='create-booking'),
+    path('upload-signed-agreement/', UploadSignedAgreementView.as_view(), name='upload-signed-agreement'),
 ]
