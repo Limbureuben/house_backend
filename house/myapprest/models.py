@@ -31,8 +31,3 @@ class Booking(models.Model):
         return f"{self.user.username} booked {self.house.house_type}"
     
 
-class SignedAgreementUpload(models.Model):
-    username = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=15)
-    file = models.FileField(upload_to='signed_agreements/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
