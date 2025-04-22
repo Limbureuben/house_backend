@@ -19,3 +19,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SignedAgreementUploadSerializer(serializers.Serializer):
+    class Meta:
+        model = SignedAgreementUpload
+        fields = ['username', 'phone_number', 'file']
