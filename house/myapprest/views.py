@@ -35,6 +35,14 @@ class HouseViewSet(viewsets.ModelViewSet):
             # If user ID is provided in the query parameters, return houses belonging to that user
             return House.objects.filter(user_id=user_id)
         return House.objects.all()
+    
+    def destroy(self, request, *args, **kwargs):
+        house = self.get_object()
+        if house.user != request.user:
+            return Response({"detail": "You are not allowed to delete this house."},
+                            status=status.HTTP_403_FORBIDDEN)
+        house.delete()
+        return Response({"detail": "House deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
