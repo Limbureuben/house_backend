@@ -24,26 +24,13 @@ class SignedAgreementUploadSerializer(serializers.Serializer):
         model = SignedAgreementUpload
         fields = ['username', 'phone_number', 'file']
 
-        
+
 
 class UploadedAgreementSerializer(serializers.ModelSerializer):
-    to_username = serializers.CharField(write_only=True)
+    from_user = serializers.ReadOnlyField(source='from_user.username')
+    to_user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
 
     class Meta:
         model = UploadedAgreement
-        fields = ['to_username', 'file', 'uploaded_at']
-        read_only_fields = ['uploaded_at']
+        fields = ['id', 'sender_phone', 'from_user', 'to_user', 'file', 'uploaded_at']
 
-    def create(self, validated_data):
-        to_username = validated_data.pop('to_username')
-        try:
-            to_user = User.objects.get(username=to_username)
-        except User.DoesNotExist:
-            raise serializers.ValidationError("Recipient user not found")
-
-        agreement = UploadedAgreement.objects.create(
-            from_user=self.context['request'].user,
-            to_user=to_user,
-            **validated_data
-        )
-        return agreement

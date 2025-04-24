@@ -137,15 +137,25 @@ class PasswordResetConfirmView(APIView):
 
 
 class UploadAgreementView(APIView):
-    parser_classes = [MultiPartParser, FormParser]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        serializer = UploadedAgreementSerializer(data=request.data, context={'request': request})
+    def post(self, request, format=None):
+        data = request.data.copy()
+        data['from_user'] = request.user.id
+
+        to_username = data.get('to_user')
+        try:
+            to_user = User.objects.get(username=to_username)
+            data['to_user'] = to_user.id
+        except User.DoesNotExist:
+            return Response({'error': 'Recipient user not found.'}, status=404)
+
+        serializer = UploadedAgreementSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Agreement uploaded successfully'}, status=201)
+            return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+
 
 
 class ViewReceivedAgreements(APIView):
