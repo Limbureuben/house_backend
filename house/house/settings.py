@@ -188,3 +188,11 @@ EMAIL_HOST_PASSWORD = 'stlamceqmzjmbvxs'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 FRONTEND_URL = 'http://localhost:4200'
 BACKEND_URL = 'http://127.0.0.1:8000'
+
+
+
+# settings.py
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
