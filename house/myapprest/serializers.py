@@ -27,9 +27,9 @@ class SignedAgreementUploadSerializer(serializers.Serializer):
 
 
 class UploadedAgreementSerializer(serializers.ModelSerializer):
-    from_user = serializers.ReadOnlyField(source='from_user.username')  # Read-only field for the logged-in user
-    to_user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())  # For selecting the recipient user
-    file = serializers.FileField()  # Ensure the 'file' field is included
+    from_user = serializers.ReadOnlyField(source='from_user.username')
+    to_user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+    sender_phone = serializers.CharField(max_length=15)
 
     class Meta:
         model = UploadedAgreement

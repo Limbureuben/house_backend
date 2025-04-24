@@ -138,31 +138,37 @@ class PasswordResetConfirmView(APIView):
 
 class UploadAgreementView(APIView):
     permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)  # Ensure we handle file uploads
 
     def post(self, request, format=None):
-        print("Upload Agreement endpoint hit")
-
+        # Copy the request data to safely modify it
         data = request.data.copy()
-        data['from_user'] = request.user.id  # Set the logged-in user as 'from_user'
 
+        # Set the from_user automatically
+        from_user = request.user
+        data['from_user'] = from_user.username  # If you're using source='from_user.username' as read-only
+
+        # Validate sender phone
+        sender_phone = data.get('sender_phone')
+        if not sender_phone:
+            return Response({'sender_phone': ['Sender phone number is required.']}, status=400)
+
+        # Validate to_user exists
         to_username = data.get('to_user')
-        print(f"Looking for recipient: {to_username}")
-        
-        try:
-            to_user = User.objects.get(username=to_username)
-            data['to_user'] = to_user.id
-        except User.DoesNotExist:
-            return Response({'error': 'Recipient user not found.'}, status=404)
+        if not to_username:
+            return Response({'to_user': ['Receiver username is required.']}, status=400)
 
+        try:
+            User.objects.get(username=to_username)
+        except User.DoesNotExist:
+            return Response({'to_user': [f"Object with username={to_username} does not exist."]}, status=400)
+
+        # Serialize and save
         serializer = UploadedAgreementSerializer(data=data)
-        
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(from_user=from_user)  # Set from_user via save()
             return Response(serializer.data, status=201)
-        else:
-            print(f"Serializer errors: {serializer.errors}")
-            return Response(serializer.errors, status=400)
+
+        return Response(serializer.errors, status=400)
 
 
 class ReceivedAgreementsView(APIView):
