@@ -30,6 +30,18 @@ class Booking(models.Model):
     def __str__(self):
         return f"{self.user.username} booked {self.house.house_type}"
     
+# class SignedAgreementUpload(models.Model):
+#     tenant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agreements_uploaded')
+#     landlord = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agreements_received')
+#     file = models.FileField(upload_to='agreements/')
+#     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+
+
+
+
+
 
 class SignedAgreementUpload(models.Model):
     username = models.CharField(max_length=100)
