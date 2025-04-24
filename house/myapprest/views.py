@@ -135,3 +135,14 @@ class PasswordResetConfirmView(APIView):
         print("Password reset successful for user:", user.username)
         return Response({'message': 'Password reset successfully'}, status=200)
 
+
+class UploadAgreementView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = UploadedAgreementSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Agreement uploaded successfully'}, status=201)
+        return Response(serializer.errors, status=400)
