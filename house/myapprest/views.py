@@ -1,3 +1,4 @@
+import os
 from rest_framework import viewsets
 
 from .tasks import send_reset_email_task
@@ -10,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from .utils.pdf_generator import generate_booking_pdf
-from django.http import HttpResponse
+from django.http import FileResponse, HttpResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -180,3 +181,13 @@ class ReceivedAgreementsView(APIView):
         return Response(serializer.data)
 
 
+class DownloadAgreementView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, filename):
+        file_path = os.path.join(settings.MEDIA_ROOT, 'agreements', filename)
+        if os.path.exists(file_path):
+            response = FileResponse(open(file_path, 'rb'), content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return response
+        return Response(status=404)

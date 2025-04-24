@@ -24,8 +24,6 @@ class SignedAgreementUploadSerializer(serializers.Serializer):
         model = SignedAgreementUpload
         fields = ['username', 'phone_number', 'file']
 
-
-
 class UploadedAgreementSerializer(serializers.ModelSerializer):
     from_user = serializers.ReadOnlyField(source='from_user.username')
     to_user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
