@@ -120,8 +120,11 @@ class UploadSignedAgreementView(APIView):
     
 class PasswordResetRequestView(APIView):
     def post(self, request):
+        print("PasswordResetRequestView POST called")  # Console debug
+
         email = request.data.get('email')
         if not email:
+            print("❌ No email provided")
             return Response({'error': 'Email is required'}, status=400)
 
         try:
@@ -141,20 +144,30 @@ class PasswordResetRequestView(APIView):
 
 class PasswordResetConfirmView(APIView):
     def post(self, request, uidb64, token):
+        print("PasswordResetConfirmView POST called")
+        print("Received uidb64:", uidb64)
+        print("Received token:", token)
+
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
+            print("Decoded UID:", uid)
             user = User.objects.get(pk=uid)
-        except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+            print("User found:", user.username)
+        except (User.DoesNotExist, ValueError, TypeError, OverflowError) as e:
+            print("Error decoding UID or fetching user:", str(e))
             return Response({'error': 'Invalid user ID'}, status=400)
 
         if not default_token_generator.check_token(user, token):
+            print("Invalid or expired token for user:", user.username)
             return Response({'error': 'Invalid or expired token'}, status=400)
 
         new_password = request.data.get('password')
         if not new_password:
+            print("No password provided")
             return Response({'error': 'Password is required'}, status=400)
 
         user.set_password(new_password)
         user.save()
+        print("Password reset successful for user:", user.username)
         return Response({'message': 'Password reset successfully'}, status=200)
 
