@@ -82,41 +82,6 @@ class CreateBookingView(APIView):
         response['Content-Disposition'] = 'attachment; filename="rental_agreement.pdf"'
         return response
 
-
-
-class UploadSignedAgreementView(APIView):
-    parser_classes = [MultiPartParser, FormParser]
-
-    def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        phone_number = request.data.get('phone_number')
-        file = request.FILES.get('file')
-
-        if not username or not phone_number or not file:
-            return Response({'error': 'All fields are required'}, status=400)
-
-        upload = SignedAgreementUpload.objects.create(
-            username=username,
-            phone_number=phone_number,
-            file=file
-        )
-
-        matched_house = House.objects.filter(contact=phone_number).first()
-
-        if matched_house:
-            data = {
-                'message': 'Upload successful. Matching house found.',
-                'house': {
-                    'id': matched_house.id,
-                    'location': matched_house.location,
-                    'house_type': matched_house.house_type,
-                    'price': matched_house.price_per_month
-                }
-            }
-        else:
-            data = {'message': 'Upload successful. No matching house found.'}
-
-        return Response(data, status=201)
     
 class PasswordResetRequestView(APIView):
     def post(self, request):
