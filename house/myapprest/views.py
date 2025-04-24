@@ -179,3 +179,4 @@ class ReceivedAgreementsView(APIView):
         serializer = UploadedAgreementSerializer(agreements, many=True)
         return Response(serializer.data)
 
+
