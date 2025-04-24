@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+
+from .tasks import send_reset_email_task
 from .models import House
 from .serializers import HouseSerializer
 from django.contrib.auth.models import User
@@ -129,14 +131,10 @@ class PasswordResetRequestView(APIView):
 
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
-        reset_link = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/"  # adjust path as needed
+        reset_link = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/"
 
-        send_mail(
-            subject='Password Reset',
-            message=f'Click the link to reset your password: {reset_link}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email]
-        )
+        # Use Celery to send the email asynchronously
+        send_reset_email_task.delay(email, reset_link)
 
         return Response({'message': 'Password reset link sent to email.'}, status=200)
 
