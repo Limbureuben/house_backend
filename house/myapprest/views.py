@@ -146,3 +146,12 @@ class UploadAgreementView(APIView):
             serializer.save()
             return Response({'message': 'Agreement uploaded successfully'}, status=201)
         return Response(serializer.errors, status=400)
+
+
+class ViewReceivedAgreements(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        agreements = UploadedAgreement.objects.filter(to_user=request.user)
+        serializer = UploadedAgreementSerializer(agreements, many=True)
+        return Response(serializer.data)
