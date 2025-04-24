@@ -10,6 +10,11 @@ from .serializers import *
 from .utils.pdf_generator import generate_booking_pdf
 from django.http import HttpResponse
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class HouseViewSet(viewsets.ModelViewSet):
@@ -76,6 +81,7 @@ class CreateBookingView(APIView):
         return response
 
 
+
 class UploadSignedAgreementView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
@@ -109,3 +115,49 @@ class UploadSignedAgreementView(APIView):
             data = {'message': 'Upload successful. No matching house found.'}
 
         return Response(data, status=201)
+    
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'Email is required'}, status=400)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        reset_link = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/"  # adjust path as needed
+
+        send_mail(
+            subject='Password Reset',
+            message=f'Click the link to reset your password: {reset_link}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email]
+        )
+
+        return Response({'message': 'Password reset link sent to email.'}, status=200)
+
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+            return Response({'error': 'Invalid user ID'}, status=400)
+
+        if not default_token_generator.check_token(user, token):
+            return Response({'error': 'Invalid or expired token'}, status=400)
+
+        new_password = request.data.get('password')
+        if not new_password:
+            return Response({'error': 'Password is required'}, status=400)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({'message': 'Password reset successfully'}, status=200)
+
