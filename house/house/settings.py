@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'graphene_django',
     'rest_framework',
-    'myapprest'
+    'myapprest',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
