@@ -14,3 +14,7 @@ admin.site.register(Booking, BookingAdmin)
 class SignedAgreementUploadAdmin(admin.ModelAdmin):
     list_display = ('username', 'phone_number', 'uploaded_at')
 admin.site.register(SignedAgreementUpload, SignedAgreementUploadAdmin)
+
+class UploadedAgreementAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_user', 'uploaded_at')
+admin.site.register(UploadedAgreement, UploadedAgreementAdmin)
