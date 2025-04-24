@@ -16,5 +16,5 @@ class SignedAgreementUploadAdmin(admin.ModelAdmin):
 admin.site.register(SignedAgreementUpload, SignedAgreementUploadAdmin)
 
 class UploadedAgreementAdmin(admin.ModelAdmin):
-    list_display = ('from_user', 'to_user', 'uploaded_at')
+    list_display = ('sender_phone','from_user', 'to_user', 'uploaded_at')
 admin.site.register(UploadedAgreement, UploadedAgreementAdmin)

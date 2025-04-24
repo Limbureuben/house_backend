@@ -39,8 +39,8 @@ class SignedAgreementUpload(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class UploadedAgreement(models.Model):
+    sender_phone = models.CharField(max_length=15, null=True)
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_agreements')
     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_agreements')
     file = models.FileField(upload_to='agreements/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    sender_phone = models.CharField(max_length=15, null=True)
