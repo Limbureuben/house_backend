@@ -116,7 +116,6 @@ class UploadSignedAgreementView(APIView):
 
         return Response(data, status=201)
     
-
 class PasswordResetRequestView(APIView):
     def post(self, request):
         email = request.data.get('email')
