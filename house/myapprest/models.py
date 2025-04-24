@@ -31,7 +31,6 @@ class Booking(models.Model):
         return f"{self.user.username} booked {self.house.house_type}"
 
 
-
 class SignedAgreementUpload(models.Model):
     username = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
