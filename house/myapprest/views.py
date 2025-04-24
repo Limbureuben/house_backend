@@ -89,7 +89,6 @@ class PasswordResetRequestView(APIView):
 
         email = request.data.get('email')
         if not email:
-            print("❌ No email provided")
             return Response({'error': 'Email is required'}, status=400)
 
         try:
