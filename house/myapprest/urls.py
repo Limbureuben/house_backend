@@ -22,5 +22,5 @@ urlpatterns = [
     path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
     path('received-agreements/', ReceivedAgreementsView.as_view(), name='my-received-agreements'),
     path('agreement/', UploadAgreementView.as_view(), name='upload-agreement'),
-
+    path('agreement/download/<str:filename>/', DownloadAgreementView.as_view(), name='download-agreement'),
 ]
