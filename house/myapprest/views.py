@@ -200,3 +200,10 @@ class UserCountView(APIView):
     def get(self, request):
         count = User.objects.count()
         return Response({'total_users': count})
+    
+class HouseCountView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        count = House.objects.count()
+        return Response({'total_houses': count})

@@ -5,10 +5,13 @@ from .models import *
 
 class HouseAdmin(admin.ModelAdmin):
     list_display = ('house_type', 'location', 'availability_date', 'contact')
+    list_per_page = 10
 admin.site.register(House, HouseAdmin)
+
 
 class BookingAdmin(admin.ModelAdmin):
     list_display = ('user', 'house', 'date_booked')
+    list_per_page = 8
 admin.site.register(Booking, BookingAdmin)
 
 class SignedAgreementUploadAdmin(admin.ModelAdmin):
