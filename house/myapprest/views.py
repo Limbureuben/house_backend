@@ -18,6 +18,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework.permissions import IsAdminUser
 
 
 class HouseViewSet(viewsets.ModelViewSet):
@@ -191,3 +192,11 @@ class DownloadAgreementView(APIView):
             response['Content-Disposition'] = f'attachment; filename="{filename}"'
             return response
         return Response(status=404)
+
+
+class UserCountView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        count = User.objects.count()
+        return Response({'total_users': count})

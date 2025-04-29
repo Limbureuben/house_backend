@@ -23,4 +23,5 @@ urlpatterns = [
     path('received-agreements/', ReceivedAgreementsView.as_view(), name='my-received-agreements'),
     path('agreement/', UploadAgreementView.as_view(), name='upload-agreement'),
     path('agreement/download/<str:filename>/', DownloadAgreementView.as_view(), name='download-agreement'),
+    path('user-count/', UserCountView.as_view(), name='user-count'),
 ]
