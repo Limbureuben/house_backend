@@ -32,3 +32,13 @@ class UploadedAgreementSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedAgreement
         fields = ['id', 'sender_phone', 'from_user', 'to_user', 'file', 'uploaded_at']
+
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
+        extra_kwargs = {
+            'location': {'default': 'Ardhi University'}
+        }

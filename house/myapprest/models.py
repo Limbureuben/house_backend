@@ -20,6 +20,19 @@ class House(models.Model):
 
     def __str__(self):
         return f"{self.house_type} - {self.location}"
+    
+
+class Room(models.Model):
+    name = models.CharField(max_length=100)
+    capacity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    location = models.CharField(max_length=255, default="Ardhi University")
+    available_date = models.DateField()
+    image = models.ImageField(upload_to='room_images/')
+    is_available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Booking(models.Model):
