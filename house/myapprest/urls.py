@@ -26,4 +26,5 @@ urlpatterns = [
     path('user-count/', UserCountView.as_view(), name='user-count'),
     path('house-count/', HouseCountView.as_view(), name='house-count'),
     path('register-room/', RegisterRoomView.as_view(), name='register-room'),
+    path('book-room/', BookingCreateView.as_view(), name='book-room'),
 ]
