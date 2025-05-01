@@ -24,5 +24,6 @@ urlpatterns = [
     path('agreement/', UploadAgreementView.as_view(), name='upload-agreement'),
     path('agreement/download/<str:filename>/', DownloadAgreementView.as_view(), name='download-agreement'),
     path('user-count/', UserCountView.as_view(), name='user-count'),
-    path('house-count/', HouseCountView.as_view(), name='house-count')
+    path('house-count/', HouseCountView.as_view(), name='house-count'),
+    path('register-room/', RegisterRoomView.as_view(), name='register-room'),
 ]
