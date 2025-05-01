@@ -224,6 +224,12 @@ class RegisterRoomView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+class AvailableRoomsAPIView(APIView):
+    def get(self, request):
+        rooms = Room.objects.filter(is_available=True)
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 class BookingCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
