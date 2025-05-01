@@ -39,6 +39,3 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = '__all__'
-        extra_kwargs = {
-            'location': {'default': 'Ardhi University'}
-        }

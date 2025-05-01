@@ -207,3 +207,18 @@ class HouseCountView(APIView):
     def get(self, request):
         count = House.objects.count()
         return Response({'total_houses': count})
+
+
+class RegisterRoomView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data.copy()
+        if not data.get('location'):
+            data['location'] = "Ardhi University"
+
+        serializer = RoomSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(is_available=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
