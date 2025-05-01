@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class House(models.Model):
     HOUSE_TYPES = [
@@ -56,3 +58,13 @@ class UploadedAgreement(models.Model):
     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_agreements')
     file = models.FileField(upload_to='agreements/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+class BookingEvent(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    booking_date = models.DateField(auto_now_add=True)
+    event_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.room.name}"

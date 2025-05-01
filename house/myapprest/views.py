@@ -19,6 +19,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.permissions import IsAdminUser
+from rest_framework import status, permissions
 
 
 class HouseViewSet(viewsets.ModelViewSet):
@@ -221,4 +222,26 @@ class RegisterRoomView(APIView):
         if serializer.is_valid():
             serializer.save(is_available=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class BookingCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = BookingSerializer(data=request.data)
+        if serializer.is_valid():
+            room_id = serializer.validated_data['room'].id
+            room = Room.objects.get(id=room_id)
+
+            if not room.is_available:
+                return Response({'error': 'Room is already booked'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Save booking and mark room as unavailable
+            serializer.save(user=request.user)
+            room.is_available = False
+            room.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
