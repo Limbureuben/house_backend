@@ -310,3 +310,11 @@ class CreateBookingEventView(APIView):
         email = EmailMessage(subject, message, to=[user_email])
         email.attach('booking_details.pdf', pdf.content, 'application/pdf')
         email.send()
+
+class BookedRoomsView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        bookings = BookingEvent.objects.select_related('room', 'user')
+        serializer = BookingEventSerializer(bookings, many=True)
+        return Response(serializer.data)

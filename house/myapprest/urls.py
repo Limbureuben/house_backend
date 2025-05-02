@@ -30,4 +30,5 @@ urlpatterns = [
     path('available-rooms/', AvailableRoomsAPIView.as_view(), name='available-rooms'),
     path('generate-pdf/<int:booking_id>/', generate_booking_pdf, name='generate-booking-pdf'),
     path('booking-events/', CreateBookingEventView.as_view(), name='create-booking-event'),
+    path('booked-event-rooms/', BookedRoomsView.as_view(), name='booked-event-rooms'),
 ]
