@@ -312,7 +312,7 @@ class CreateBookingEventView(APIView):
         email.send()
 
 class BookedRoomsView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         bookings = BookingEvent.objects.select_related('room', 'user')
