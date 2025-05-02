@@ -1,4 +1,5 @@
 import os
+import uuid
 from rest_framework import viewsets
 
 from .tasks import send_reset_email_task
@@ -20,6 +21,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.permissions import IsAdminUser
 from rest_framework import status, permissions
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from django.core.mail import EmailMessage
 
 
 class HouseViewSet(viewsets.ModelViewSet):
@@ -229,25 +233,80 @@ class AvailableRoomsAPIView(APIView):
         rooms = Room.objects.filter(is_available=True)
         serializer = RoomSerializer(rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
 
-class BookingCreateView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
+class CreateBookingEventView(APIView):
+    from django.contrib.auth.models import User
+
+class CreateBookingEventView(APIView):
     def post(self, request):
-        serializer = BookingSerializer(data=request.data)
-        if serializer.is_valid():
-            room_id = serializer.validated_data['room'].id
-            room = Room.objects.get(id=room_id)
-
-            if not room.is_available:
-                return Response({'error': 'Room is already booked'}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Save booking and mark room as unavailable
-            serializer.save(user=request.user)
-            room.is_available = False
-            room.save()
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # Collect user and booking details from request
+        user_details = request.data['user_details']
+        room_id = request.data['room']
+        event_date = request.data['event_date']
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        room = Room.objects.get(id=room_id)
+
+        try:
+            user = User.objects.get(username=user_details['username'])
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=404)
+
+        booking = BookingEvent.objects.create(
+            user=user,
+            room=room,
+            event_date=event_date,
+        )
+
+        # Generate a reference number for the booking
+        booking.generate_reference_number()
+        booking.save()
+
+        # Mark the room as unavailable
+        room.is_available = False
+        room.save()
+
+        # Generate the PDF for the booking
+        pdf = self.generate_booking_pdf(booking, user_details, room)
+
+        # Send the email with the PDF attached
+        self.send_booking_email(user_details['email'], pdf)
+
+        return Response(BookingEventSerializer(booking).data, status=201)
+
+
+    def generate_booking_pdf(self, booking, user_details, room):
+        # Create the HttpResponse object for PDF
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="booking_{booking.id}.pdf"'
+        
+        # Create PDF using ReportLab
+        p = canvas.Canvas(response, pagesize=letter)
+        width, height = letter
+
+        p.setFont("Helvetica", 12)
+        p.drawString(50, 750, f"Booking ID: {booking.id}")
+        p.drawString(50, 730, f"Room: {room.name}")
+        p.drawString(50, 710, f"Location: {room.location}")
+        p.drawString(50, 690, f"Price: Tsh {room.price}")
+        p.drawString(50, 670, f"Event Date: {booking.event_date}")
+        p.drawString(50, 650, f"User: {user_details['username']}")
+        p.drawString(50, 630, f"Email: {user_details['email']}")
+        p.drawString(50, 610, f"Phone: {user_details['phone']}")
+        
+        # Include payment details
+        p.drawString(50, 590, f"Payment Reference Number: {booking.reference_number}")
+        p.drawString(50, 570, f"Payment Status: {booking.payment_status}")
+        p.drawString(50, 550, f"Amount to Pay: Tsh {room.price}")
+
+        p.showPage()
+        p.save()
+        
+        return response
+
+    def send_booking_email(self, user_email, pdf):
+        subject = "Booking Confirmation"
+        message = "Thank you for booking with us. Please find your booking details attached."
+        email = EmailMessage(subject, message, to=[user_email])
+        email.attach('booking_details.pdf', pdf.content, 'application/pdf')
+        email.send()

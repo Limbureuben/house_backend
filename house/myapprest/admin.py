@@ -26,3 +26,8 @@ class RoomAdmin(admin.ModelAdmin):
     list_display = ('name', 'capacity', 'price', 'location', 'available_date', 'is_available')
     list_per_page = 10
 admin.site.register(Room, RoomAdmin)
+
+class BookingEventAdmin(admin.ModelAdmin):
+    list_display = ('user', 'room', 'booking_date', 'reference_number')
+    list_per_page = 10
+admin.site.register(BookingEvent, BookingEventAdmin)

@@ -41,8 +41,7 @@ class RoomSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BookingSerializer(serializers.ModelSerializer):
+class BookingEventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Booking
+        model = BookingEvent
         fields = '__all__'
-        read_only_fields = ['user', 'booking_date']

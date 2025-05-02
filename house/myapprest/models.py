@@ -65,6 +65,12 @@ class BookingEvent(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     booking_date = models.DateField(auto_now_add=True)
     event_date = models.DateField()
+    reference_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    payment_status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('paid', 'Paid')], default='pending')
+
+    def generate_reference_number(self):
+        # Generate a unique reference number (for example, combining user ID and booking ID)
+        self.reference_number = f"BOOK-{self.id}-{self.user.id}"
 
     def __str__(self):
         return f"{self.user.username} - {self.room.name}"
