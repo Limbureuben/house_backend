@@ -40,11 +40,13 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = '__all__'
 
-
 class BookingEventSerializer(serializers.ModelSerializer):
     room = RoomSerializer()
+    user = UserSerializer()  # <-- include this
 
     class Meta:
         model = BookingEvent
-        fields = ['id', 'room', 'event_date', 'booking_date', 'reference_number', 'payment_status']
+        fields = [
+            'id', 'user', 'room', 'booking_date', 'reference_number', 'payment_status'
+        ]
 

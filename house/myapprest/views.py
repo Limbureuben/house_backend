@@ -312,9 +312,24 @@ class CreateBookingEventView(APIView):
         email.send()
 
 class BookedRoomsView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
         bookings = BookingEvent.objects.select_related('room', 'user')
         serializer = BookingEventSerializer(bookings, many=True)
         return Response(serializer.data)
+    
+    
+class InactiveRoomsAPIView(APIView):
+    def get(self, request):
+        rooms = Room.objects.filter(is_available=False)
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ActivateRoomAPIView(APIView):
+    def patch(self, request, room_id):
+        try:
+            room = Room.objects.get(id=room_id)
+            room.is_available = True
+            room.save()
+            return Response({"message": "Room activated"}, status=status.HTTP_200_OK)
+        except Room.DoesNotExist:
+            return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
