@@ -333,3 +333,12 @@ class ActivateRoomAPIView(APIView):
             return Response({"message": "Room activated"}, status=status.HTTP_200_OK)
         except Room.DoesNotExist:
             return Response({"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class DashboardStatsAPIView(APIView):
+    def get(self, request):
+        data = {
+            "total_rooms": Room.objects.count(),
+            "total_users": User.objects.count(),
+            "total_bookings": Booking.objects.count(),
+        }
+        return Response(data, status=status.HTTP_200_OK)
