@@ -33,4 +33,5 @@ urlpatterns = [
     path('booked-event-rooms/', BookedRoomsView.as_view(), name='booked-event-rooms'),
     path('inactive-rooms/', InactiveRoomsAPIView.as_view(), name='inactive-rooms'),
     path('activate-room/<int:room_id>/', ActivateRoomAPIView.as_view()),
+    path('dashboard-stats/', DashboardStatsAPIView.as_view(), name='dashboard-stats'),
 ]

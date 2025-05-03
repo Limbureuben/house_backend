@@ -338,7 +338,7 @@ class DashboardStatsAPIView(APIView):
     def get(self, request):
         data = {
             "total_rooms": Room.objects.count(),
-            "total_users": User.objects.count(),
+            "total_users": User.objects.filter(is_staff=False, is_superuser=False).count(),
             "total_bookings": Booking.objects.count(),
         }
         return Response(data, status=status.HTTP_200_OK)
