@@ -305,7 +305,8 @@ class CreateBookingEventView(APIView):
         p.line(50, height - 70, width - 50, height - 70)
 
         # Draw Logo (top-right corner)
-        p.drawImage(logo_reader, width - 150, height - 120, width=80, height=80, mask='auto')
+        p.drawImage(logo_reader, width - 150, height - 160, width=80, height=80, mask='auto')
+
 
         # Booking Details
         y = height - 140

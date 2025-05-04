@@ -170,13 +170,14 @@ CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:4200",
-    "http://localhost:5173"
-
+    "http://localhost:5173",
+    "https://178c-197-186-8-56.ngrok-free.app"
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "https://178c-197-186-8-56.ngrok-free.app"
 ]
 
 MEDIA_URL = '/media/'
