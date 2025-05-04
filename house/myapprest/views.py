@@ -294,7 +294,7 @@ class CreateBookingEventView(APIView):
         qr_reader = ImageReader(qr_buffer)
 
         # Load your logo
-        logo_path = "../media/room_images/ardhi.png"  # Replace with actual path
+        logo_path = "media/room_images/ardhi.png"  # Replace with actual path
         logo_reader = ImageReader(logo_path)
 
         # Draw Title
