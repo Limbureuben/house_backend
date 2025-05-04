@@ -24,6 +24,10 @@ from rest_framework import status, permissions
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from django.core.mail import EmailMessage
+from reportlab.lib import colors
+from io import BytesIO
+import qrcode
+from reportlab.lib.utils import ImageReader
 
 
 class HouseViewSet(viewsets.ModelViewSet):
@@ -276,32 +280,86 @@ class CreateBookingEventView(APIView):
 
 
     def generate_booking_pdf(self, booking, user_details, room):
-        # Create the HttpResponse object for PDF
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="booking_{booking.id}.pdf"'
-        
-        # Create PDF using ReportLab
         p = canvas.Canvas(response, pagesize=letter)
         width, height = letter
 
+        # Generate QR code (e.g., for booking ID or a URL)
+        qr_data = f"Booking ID: {booking.id}\nUser: {user_details['username']}\nEvent Date: {booking.event_date}"
+        qr_img = qrcode.make(qr_data)
+        qr_buffer = BytesIO()
+        qr_img.save(qr_buffer, format='PNG')
+        qr_buffer.seek(0)
+        qr_reader = ImageReader(qr_buffer)
+
+        # Load your logo
+        logo_path = "../media/room_images/ardhi.png"  # Replace with actual path
+        logo_reader = ImageReader(logo_path)
+
+        # Draw Title
+        p.setFont("Helvetica-Bold", 20)
+        p.setFillColor(colors.darkblue)
+        p.drawCentredString(width / 2.0, height - 60, "Booking Confirmation")
+        p.setStrokeColor(colors.grey)
+        p.line(50, height - 70, width - 50, height - 70)
+
+        # Draw Logo (top-right corner)
+        p.drawImage(logo_reader, width - 150, height - 120, width=80, height=80, mask='auto')
+
+        # Booking Details
+        y = height - 140
+        p.setFont("Helvetica-Bold", 14)
+        p.setFillColor(colors.black)
+        p.drawString(50, y, "Booking Details")
+
         p.setFont("Helvetica", 12)
-        p.drawString(50, 750, f"Booking ID: {booking.id}")
-        p.drawString(50, 730, f"Room: {room.name}")
-        p.drawString(50, 710, f"Location: {room.location}")
-        p.drawString(50, 690, f"Price: Tsh {room.price}")
-        p.drawString(50, 670, f"Event Date: {booking.event_date}")
-        p.drawString(50, 650, f"User: {user_details['username']}")
-        p.drawString(50, 630, f"Email: {user_details['email']}")
-        p.drawString(50, 610, f"Phone: {user_details['phone']}")
-        
-        # Include payment details
-        p.drawString(50, 590, f"Payment Reference Number: {booking.reference_number}")
-        p.drawString(50, 570, f"Payment Status: {booking.payment_status}")
-        p.drawString(50, 550, f"Amount to Pay: Tsh {room.price}")
+        y -= 20
+        p.drawString(70, y, f"Booking ID: {booking.id}")
+        y -= 20
+        p.drawString(70, y, f"Room: {room.name}")
+        y -= 20
+        p.drawString(70, y, f"Location: {room.location}")
+        y -= 20
+        p.drawString(70, y, f"Price: Tsh {room.price}")
+        y -= 20
+        p.drawString(70, y, f"Event Date: {booking.event_date}")
+
+        y -= 30
+        p.setFont("Helvetica-Bold", 14)
+        p.drawString(50, y, "User Information")
+
+        p.setFont("Helvetica", 12)
+        y -= 20
+        p.drawString(70, y, f"Name: {user_details['username']}")
+        y -= 20
+        p.drawString(70, y, f"Email: {user_details['email']}")
+        y -= 20
+        p.drawString(70, y, f"Phone: {user_details['phone']}")
+
+        y -= 30
+        p.setFont("Helvetica-Bold", 14)
+        p.drawString(50, y, "Payment Information")
+
+        p.setFont("Helvetica", 12)
+        y -= 20
+        p.drawString(70, y, f"Reference Number: {booking.reference_number}")
+        y -= 20
+        p.drawString(70, y, f"Payment Status: {booking.payment_status}")
+        y -= 20
+        p.drawString(70, y, f"Amount Paid: Tsh {room.price}")
+
+        # Draw QR Code on the right side
+        p.drawImage(qr_reader, width - 150, y - 20, width=100, height=100)
+
+        # Footer
+        p.setFont("Helvetica-Oblique", 10)
+        p.setFillColor(colors.grey)
+        p.drawCentredString(width / 2.0, 30, "Thank you for booking with us!")
 
         p.showPage()
         p.save()
-        
+
         return response
 
     def send_booking_email(self, user_email, pdf):
@@ -339,6 +397,6 @@ class DashboardStatsAPIView(APIView):
         data = {
             "total_rooms": Room.objects.count(),
             "total_users": User.objects.filter(is_staff=False, is_superuser=False).count(),
-            "total_bookings": Booking.objects.count(),
+            "total_bookings": BookingEvent.objects.count(),
         }
         return Response(data, status=status.HTTP_200_OK)
